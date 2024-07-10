@@ -5,6 +5,7 @@ import numpy as np
 import torch
 import numpy as np
 from fast_pytorch_kmeans import KMeans
+import argparse
 from tqdm import tqdm
 
 def feature_based_clustering(wsi_h5, radius=1):
@@ -35,9 +36,14 @@ def createDir_h5_to_pt(h5_path, save_path):
         except OSError:
             pbar.set_description('%s - Broken H5' % (h5_fname[:12]))
             print(h5_fname, 'Broken')
-            
-h5_path = '<h5 path>' # h5 path includes coordinates extracted from WSIs
-save_path = '<save path>' # save path includes cluster ids for patches in WSIs
 
-os.makedirs(save_path, exist_ok=True)
-createDir_h5_to_pt(h5_path, save_path)
+parser = argparse.ArgumentParser(description='seg and patch')
+parser.add_argument('--h5_path', type = str,
+					help='path to folder containing coordinates stored in .h5 files')
+parser.add_argument('--save_path', type = str,
+					help='path to folder will be used to save clusters')
+
+if __name__ == '__main__': 
+    args = parser.parse_args()
+    os.makedirs(args.save_path, exist_ok=True)
+    createDir_h5_to_pt(args.h5_path, args.save_path)
